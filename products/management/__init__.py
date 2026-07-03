@@ -1,0 +1,1 @@
+"""Initialize app management commands."""
