@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Profile - Sheozy{% endblock %}
+
+{% block content %}
+<section class="profile-section">
+    <div class="container">
+        <h1 class="section-title">My Profile</h1>
+
+        <div class="profile-layout">
+            <!-- Profile Info -->
+            <div class="profile-card">
+                <h2>Account Information</h2>
+                
+                <div class="profile-info">
+                    <div class="info-item">
+                        <label>Email:</label>
+                        <p>{{ user.email }}</p>
+                    </div>
+                    
+                    <div class="info-item">
+                        <label>Name:</label>
+                        <p>{{ user.get_full_name|default:"Not provided" }}</p>
+                    </div>
+                    
+                    <div class="info-item">
+                        <label>Phone:</label>
+                        <p>{{ user.phone|default:"Not provided" }}</p>
+                    </div>
+                    
+                    <div class="info-item">
+                        <label>Bio:</label>
+                        <p>{{ user.bio|default:"Not provided" }}</p>
+                    </div>
+                    
+                    <div class="info-item">
+                        <label>Address:</label>
+                        <p>{{ user.address|default:"Not provided" }}</p>
+                    </div>
+                    
+                    <div class="info-item">
+                        <label>City:</label>
+                        <p>{{ user.city|default:"Not provided" }}</p>
+                    </div>
+                    
+                    <div class="info-item">
+                        <label>Country:</label>
+                        <p>{{ user.country|default:"Not provided" }}</p>
+                    </div>
+                    
+                    <div class="info-item">
+                        <label>Member Since:</label>
+                        <p>{{ user.date_joined|date:"F d, Y" }}</p>
+                    </div>
+                </div>
+                
+                <a href="{% url 'users:edit_profile' %}" class="btn btn-primary">Edit Profile</a>
+            </div>
+
+            <!-- Quick Links -->
+            <aside class="profile-sidebar">
+                <div class="sidebar-card">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="{% url 'orders:order_list' %}"><i class="fas fa-box"></i> My Orders</a></li>
+                        <li><a href="{% url 'users:edit_profile' %}"><i class="fas fa-edit"></i> Edit Profile</a></li>
+                        <li><a href="{% url 'products:product_list' %}"><i class="fas fa-shopping-bag"></i> Shop Now</a></li>
+                        <li><a href="{% url 'account_logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                    </ul>
+                </div>
+            </aside>
+        </div>
+    </div>
+</section>
+
+<style>
+.profile-section {
+    padding: 60px 20px;
+}
+
+.profile-layout {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 30px;
+}
+
+.profile-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: var(--shadow-md);
+    padding: 24px;
+}
+
+.profile-card h2 {
+    font-size: 22px;
+    margin-bottom: 24px;
+    color: var(--gray-900);
+}
+
+.profile-info {
+    margin-bottom: 24px;
+}
+
+.info-item {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.info-item label {
+    display: block;
+    font-weight: 600;
+    color: var(--gray-700);
+    margin-bottom: 4px;
+}
+
+.info-item p {
+    color: var(--gray-600);
+}
+
+.sidebar-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: var(--shadow-md);
+    padding: 20px;
+}
+
+.sidebar-card h3 {
+    font-size: 18px;
+    margin-bottom: 16px;
+    color: var(--gray-900);
+}
+
+.sidebar-card ul {
+    list-style: none;
+}
+
+.sidebar-card li {
+    margin-bottom: 12px;
+}
+
+.sidebar-card a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--gray-700);
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: var(--transition);
+}
+
+.sidebar-card a:hover {
+    background: var(--gray-100);
+    color: var(--primary-color);
+    padding-left: 16px;
+}
+
+@media (max-width: 768px) {
+    .profile-layout {
+        grid-template-columns: 1fr;
+    }
+    
+    .sidebar-card {
+        position: sticky;
+        top: 100px;
+    }
+}
+</style>
+{% endblock %}

@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home - Sheozy{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <h1 class="hero-title">Welcome to Sheozy</h1>
+        <p class="hero-subtitle">Discover the latest in modern, stylish shopping</p>
+        <a href="{% url 'products:product_list' %}" class="btn btn-primary btn-lg">Shop Now</a>
+    </div>
+    <div class="hero-image">
+        <div class="hero-gradient"></div>
+    </div>
+</section>
+
+{% if featured_products %}
+<!-- Sheos Collection -->
+<section class="collection-section">
+    <div class="container">
+        <div class="collection-head">
+            <div>
+                <p class="eyebrow">Exclusive</p>
+                <h2 class="section-title">Sheos Collection</h2>
+                <p class="section-subtitle">Step into fresh footwear styles curated for every mood, season, and city look.</p>
+            </div>
+            <a href="{% url 'products:product_list' %}" class="btn btn-outline">Explore Sheos</a>
+        </div>
+        <div class="collection-grid">
+            {% for product in featured_products|slice:":4" %}
+            <article class="collection-card card-hover">
+                <div class="collection-image">
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                </div>
+                <div class="collection-copy">
+                    <p class="eyebrow">Sheos</p>
+                    <h3>{{ product.name }}</h3>
+                    <p>{{ product.description|truncatechars:90 }}</p>
+                    <div class="collection-meta">
+                        <span class="price current-price">₹{{ product.get_display_price }}</span>
+                        <a href="{% url 'products:product_detail' product.slug %}" class="btn btn-small">View</a>
+                    </div>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Categories Section -->
+{% if categories %}
+<section class="categories-section">
+    <div class="container">
+        <h2 class="section-title">Shop by Category</h2>
+        <div class="categories-grid">
+            {% for category in categories %}
+            <a href="{% url 'products:category_detail' category.slug %}" class="category-card card-hover">
+                <div class="category-image">
+                    {% if category.image %}
+                        <img src="{{ category.image.url }}" alt="{{ category.name }}">
+                    {% else %}
+                        <div class="placeholder-image">
+                            <i class="fas fa-folder"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                <h3>{{ category.name }}</h3>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Featured Products Section -->
+{% if featured_products %}
+<section class="featured-section">
+    <div class="container">
+        <h2 class="section-title">Featured Products</h2>
+        <div class="products-grid">
+            {% for product in featured_products %}
+            <div class="product-card card-hover animate-on-scroll">
+                <div class="product-image-wrapper">
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+                    {% if product.get_discount_percentage %}
+                    <span class="discount-badge">-{{ product.get_discount_percentage }}%</span>
+                    {% endif %}
+                    <div class="product-overlay">
+                        <a href="{% url 'products:product_detail' product.slug %}" class="btn btn-small">View Details</a>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name">{{ product.name }}</h3>
+                    <div class="product-rating">
+                        <div class="stars">
+                            {% for i in "12345" %}
+                                {% if i|add:"0" <= product.rating %}
+                                    <i class="fas fa-star"></i>
+                                {% elif i|add:"0" <= product.rating|add:"0.5" %}
+                                    <i class="fas fa-star-half-alt"></i>
+                                {% else %}
+                                    <i class="far fa-star"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <span class="review-count">({{ product.reviews_count }})</span>
+                    </div>
+                    <div class="product-price">
+                        {% if product.discount_price %}
+                            <span class="price original-price">₹{{ product.price }}</span>
+                            <span class="price current-price">₹{{ product.get_display_price }}</span>
+                        {% else %}
+                            <span class="price current-price">₹{{ product.price }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Call to Action Section -->
+<section class="cta-section">
+    <div class="container">
+        <h2>Ready to Start Shopping?</h2>
+        <p>Browse our full collection of products</p>
+        <a href="{% url 'products:product_list' %}" class="btn btn-secondary btn-lg">Explore All Products</a>
+    </div>
+</section>
+{% endblock %}

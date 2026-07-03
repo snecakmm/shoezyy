@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Shopping Cart - Sheozy{% endblock %}
+
+{% block content %}
+<section class="cart-section">
+    <div class="container">
+        <div class="cart-topbar">
+            <div>
+                <p class="eyebrow">Your Picks</p>
+                <h1>Shopping Cart</h1>
+            </div>
+            <div class="cart-steps">
+                <span class="step step--active">1. Cart</span>
+                <span class="step">2. Checkout</span>
+                <span class="step">3. Order</span>
+            </div>
+        </div>
+
+        {% if items %}
+        <div class="cart-layout">
+            <div class="cart-items">
+                {% for item in items %}
+                <div class="cart-card card-hover">
+                    <div class="cart-card-left">
+                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                        <div class="cart-item-details">
+                            <h4><a href="{% url 'products:product_detail' item.product.slug %}">{{ item.product.name }}</a></h4>
+                            <p class="cart-item-meta">Seller: Sheozy | In stock: {{ item.product.stock }}</p>
+                            <div class="cart-quantity-row">
+                                <span>Qty:</span>
+                                <form method="post" action="{% url 'cart:update_cart' item.id %}" class="quantity-form">
+                                    {% csrf_token %}
+                                    <input type="number" name="quantity" value="{{ item.quantity }}" min="1" max="{{ item.product.stock }}" onchange="this.form.submit()">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+<div class="cart-card-right">
+                        <div class="price-block">
+                            <span class="price current-price">₹{{ item.product.get_display_price }}</span>
+                            {% if item.product.discount_price %}
+                            <span class="price original-price">₹{{ item.product.price }}</span>
+                            {% endif %}
+                        </div>
+Total: <strong>₹{{ item.get_total_price }}</strong>
+                        <div class="cart-actions">
+                            <a href="{% url 'cart:remove_from_cart' item.id %}" class="btn btn-outline">Remove</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <aside class="cart-summary">
+                <div class="summary-card summary-card--highlight">
+                    <h3>Summary</h3>
+                    <div class="summary-row">
+                        <span>Subtotal</span>
+                        <strong>₹{{ cart.get_total_price }}</strong>
+                    </div>
+                    <div class="summary-row">
+<span>Shipping</span>
+                        <strong>₹0.00</strong>
+                    </div>
+                    <div class="summary-row">
+<span>Tax</span>
+                        <strong>₹0.00</strong>
+                    </div>
+                    <hr>
+                    <div class="summary-row total">
+                        <span>Total</span>
+<strong>₹{{ cart.get_total_price }}</strong>
+                    </div>
+                    <a href="{% url 'orders:checkout' %}" class="btn btn-primary btn-block btn-lg">Proceed to Checkout</a>
+                    <a href="{% url 'products:product_list' %}" class="btn btn-secondary btn-block">Continue Shopping</a>
+                    <a href="{% url 'cart:clear_cart' %}" class="btn btn-outline btn-block" onclick="return confirm('Clear entire cart?')">Clear Cart</a>
+                </div>
+            </aside>
+        </div>
+        {% else %}
+        <div class="empty-cart">
+            <div class="empty-state">
+                <i class="fas fa-shopping-cart"></i>
+                <h2>Your cart is empty</h2>
+                <p>Start shopping to add items to your cart!</p>
+                <a href="{% url 'products:product_list' %}" class="btn btn-primary btn-lg">Shop Now</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Order {{ order.order_number }} - Sheozy{% endblock %}
+
+{% block content %}
+<section class="order-detail-section">
+    <div class="container">
+        <div class="order-header-detail">
+            <h1>Order {{ order.order_number }}</h1>
+            <span class="status-badge status-{{ order.status }}">{{ order.get_status_display }}</span>
+        </div>
+
+        <div class="order-detail-layout">
+            <!-- Order Items -->
+            <div class="order-items-section">
+                <h2>Order Items</h2>
+                <table class="order-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in order.items.all %}
+                        <tr>
+                            <td>
+                                {% if item.product %}
+                                    <a href="{% url 'products:product_detail' item.product.slug %}">{{ item.product.name }}</a>
+                                {% else %}
+                                    <span class="text-muted">Product no longer available</span>
+                                {% endif %}
+                            </td>
+<td>₹{{ item.price }}</td>
+                            <td>{{ item.quantity }}</td>
+<td>₹{{ item.get_total_price }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Order Summary and Details -->
+            <aside class="order-details">
+                <div class="detail-card">
+                    <h3>Order Summary</h3>
+                    <div class="detail-row">
+                        <span>Subtotal:</span>
+                        <span>₹{{ order.subtotal }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span>Shipping:</span>
+<span>₹{{ order.shipping_cost }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span>Tax:</span>
+<span>₹{{ order.tax }}</span>
+                    </div>
+                    <hr>
+                    <div class="detail-row total">
+                        <span>Total:</span>
+<span>₹{{ order.total }}</span>
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <h3>Shipping Address</h3>
+                    <p>
+                        {{ order.shipping_name }}<br>
+                        {{ order.shipping_address }}<br>
+                        {{ order.shipping_city }}, {{ order.shipping_state }} {{ order.shipping_postal_code }}<br>
+                        {{ order.shipping_country }}
+                    </p>
+                    <p class="contact-info">
+                        <strong>Email:</strong> {{ order.shipping_email }}<br>
+                        <strong>Phone:</strong> {{ order.shipping_phone }}
+                    </p>
+                </div>
+
+                <div class="detail-card">
+                    <h3>Payment Information</h3>
+                    <div class="detail-row">
+                        <span>Method:</span>
+                        <span>{{ order.payment_method|title }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span>Status:</span>
+                        <span>{% if order.is_paid %}<i class="fas fa-check"></i> Paid{% else %}<i class="fas fa-clock"></i> Pending{% endif %}</span>
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <h3>Order Timeline</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <span class="timeline-date">{{ order.created_at|date:"M d, Y" }}</span>
+                            <span class="timeline-label">Order Placed</span>
+                        </div>
+                        {% if order.delivered_at %}
+                        <div class="timeline-item">
+                            <span class="timeline-date">{{ order.delivered_at|date:"M d, Y" }}</span>
+                            <span class="timeline-label">Delivered</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <a href="{% url 'orders:order_list' %}" class="btn btn-secondary btn-block">Back to Orders</a>
+            </aside>
+        </div>
+    </div>
+</section>
+{% endblock %}

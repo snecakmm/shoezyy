@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Sheozy - Modern Online Shopping{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-brand">
+                <a href="{% url 'products:home' %}" class="logo">
+                    <i class="fas fa-shopping-bag"></i> Sheozy
+                </a>
+            </div>
+            
+            <div class="navbar-menu">
+                <a href="{% url 'products:home' %}" class="nav-link">Home</a>
+                <a href="{% url 'products:product_list' %}" class="nav-link">Products</a>
+                
+                {% if user.is_authenticated %}
+                    <div class="nav-dropdown">
+                        <button class="nav-link dropdown-toggle">
+                            <i class="fas fa-user"></i> Account
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="{% url 'users:profile' %}" class="dropdown-item">Profile</a>
+                            <a href="{% url 'orders:order_list' %}" class="dropdown-item">My Orders</a>
+                            <hr>
+                            <a href="{% url 'account_logout' %}" class="dropdown-item">Logout</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <a href="{% url 'account_login' %}" class="nav-link">Login</a>
+                    <a href="{% url 'account_signup' %}" class="nav-link btn-signup">Sign Up</a>
+                {% endif %}
+            </div>
+            
+            <a href="{% url 'cart:cart' %}" class="cart-link">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count" id="cart-count">0</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Messages -->
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} animate-in">
+                    {{ message }}
+                    <button class="close">&times;</button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h3>About Sheozy</h3>
+                    <p>Your premier destination for modern, stylish shopping online. Quality products, exceptional service.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="{% url 'products:product_list' %}">Shop</a></li>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Customer Service</h3>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Shipping Info</a></li>
+                        <li><a href="#">Returns</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Follow Us</h3>
+                    <div class="social-links">
+                        <a href="https://facebook.com/nexvora.studio" class="social-icon"><i class="fab fa-facebook"></i></a>
+                        <a href="https://twitter.com/nexvora_studio" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="https://instagram.com/nexvora.studio" class="social-icon"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Sheozy. © All rights reserved. Sabith</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

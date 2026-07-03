@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}Login - Sheozy{% endblock %}
+
+{% block content %}
+<section class="auth-page">
+    <div class="auth-card auth-card--login">
+        <!-- <div class="auth-card__image">
+            <div class="auth-image-overlay"></div>
+            <div class="auth-image-copy">
+                <h2>Sheozy</h2>
+                <p>Shop the freshest styles and make every step unforgettable.</p>
+            </div>
+        </div> -->
+        <div class="auth-card__form">
+            <div class="auth-title-group">
+                <p class="eyebrow">Welcome back</p>
+                <h1>Login to Sheozy</h1>
+            </div>
+
+            <form method="post" action="{% url 'account_login' %}" class="auth-form">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+
+                <div class="form-group">
+                    <label for="id_login">Email</label>
+                    {{ form.login }}
+                    {{ form.login.errors }}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_password">Password</label>
+                    {{ form.password }}
+                    {{ form.password.errors }}
+                </div>
+
+                {% if redirect_field_value %}
+                    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                {% endif %}
+
+                <button type="submit" class="btn btn-primary btn-lg btn-block">Login</button>
+            </form>
+
+            <div class="auth-divider"><span>New to Sheozy?</span></div>
+
+            <div class="auth-social-group">
+                <a href="{% url 'account_signup' %}" class="btn btn-outline btn-block">Create New Account</a>
+            </div>
+
+            <p class="auth-note">By continuing, you agree to Sheozy’s Terms of Service and Privacy Policy.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

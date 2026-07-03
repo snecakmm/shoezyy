@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Orders - Sheozy{% endblock %}
+
+{% block content %}
+<section class="orders-section">
+    <div class="container">
+        <h1 class="section-title">My Orders</h1>
+
+        {% if orders %}
+        <div class="orders-list">
+            {% for order in orders %}
+            <div class="order-card card-hover">
+                <div class="order-header">
+                    <div>
+                        <h3>Order #{{ order.order_number }}</h3>
+                        <p class="order-date">{{ order.created_at|date:"F d, Y" }}</p>
+                    </div>
+                    <div class="order-status">
+                        <span class="status-badge status-{{ order.status }}">{{ order.get_status_display }}</span>
+                    </div>
+                </div>
+                <div class="order-body">
+                    <div class="order-info">
+                        <div class="info-item">
+                            <span class="label">Items:</span>
+                            <span>{{ order.items.count }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Total:</span>
+<span class="total">₹{{ order.total }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Payment:</span>
+                            <span>{% if order.is_paid %}<i class="fas fa-check"></i> Paid{% else %}<i class="fas fa-clock"></i> Pending{% endif %}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="order-footer">
+                    <a href="{% url 'orders:order_detail' order.id %}" class="btn btn-small">View Details</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-inbox"></i>
+            <h2>No orders yet</h2>
+            <p>Start shopping to place your first order!</p>
+            <a href="{% url 'products:product_list' %}" class="btn btn-primary">Shop Now</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
